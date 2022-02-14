@@ -12,9 +12,9 @@ use think\facade\Db;
          $map[] = ['nickname','like','%'.$keyword.'%'];
          $Nowpage = input('get.page')?input('get.page'):1;
          $limits = input('get.limit',10);
-         $count = Db::name('room')->where($map)->count();
+         $count = Db::name('member')->where($map)->count();
          $allPage = intval(ceil($count/$limits));
-         $lists = Db::name('room')->hwere($map)->page($Nowpage,$limits)->order('id asc')->select();
+         $lists = Db::name('member')->where($map)->page($Nowpage,$limits)->order('id asc')->select();
          return json(['code'=>1,'data'=>['lists'=>$lists,'count'=>$count],'msg'=>'']);
      }
      public function add()
@@ -77,7 +77,7 @@ use think\facade\Db;
              Db::name('memebr')->where($map)->update(['status'=>0]);
              return json(['code'=>1,'data'=>'','msg'=>'操作成功']);
          }else{
-            Db::name('memebr')->where($map)->update(['status'=>0]);
+            Db::name('memebr')->where($map)->update(['status'=>1]);
             return json(['code'=>0,'data'=>'','msg'=>'操作成功']);
          }
      }

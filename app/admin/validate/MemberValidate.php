@@ -5,9 +5,10 @@ use think\facade\Validate;
 
 class MenberValidate extends Validate{
     protected $rule = [
-        'nickname'      => 'require',
-        'phone'         => 'require',
-        'real_time'     => 'require'
+        'username'           => 'require',
+        'phone'              => 'require|mobile',
+        'real_time'          => 'require',
+        'id_card'            => 'require|idCard'
     ];
 }
 ?>

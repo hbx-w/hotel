@@ -12,7 +12,7 @@ class Login extends Base{
             $password = input('post.password');
             $code = input('post.code');
             try{
-                validate('LoginValidate',compact('username','password','code'));
+                validate('LoginValidate',compact('username','password'));
             }catch(ValidateException $e){
                 return json(['code'=>0,'msg'=>$e->getError()]);
             }

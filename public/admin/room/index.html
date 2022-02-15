@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>酒店后台管理系统</title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css" media="all">
+</head>
+<body>
+    <div class="layui-container" style="margin-top: 40px;">
+        <div class="layui-row">
+            <div class="layui-col-md4 layui-col-md-offset4">
+                <div class="layui-form">
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <input type="text" id="keyword" name="keyword" placeholder="请输入房间类型" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                          <button type="button" id="search" class="layui-btn" lay-submit>搜索</button>
+                        </div>
+                    </div>
+            </div>
+            <table id="table" lay-filter="test"></table>
+        </div>
+    </div>
+    <script src="/static/layui/layui.js"></script>
+    <script>
+        layui.use(['form','table','layer'],function(){
+            var $    = layui.$
+            ,form    = layui.form
+            ,table   = layui.table;
+
+            table.render({
+                elem: '#table'
+                ,url: "http://www.csc.com/admin/room/index" //数据接口
+                ,page: true //开启分页
+                ,parseData: function(res){ //res 即为原始返回的数据
+                    return {
+                    "code": res.code ==1?0:1, //解析接口状态
+                    "msg": res.msg, //解析提示文本
+                    "count": res.data.count, //解析数据长度
+                    "data": res.data.lists //解析数据列表
+                    };
+                }
+                ,cols: [[ //表头
+                {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
+                ,{field: 'type', title: '房间类型', width:80}
+                ]]
+            });
+        });
+    </script>
+</body>
+</html>

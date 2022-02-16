@@ -78,7 +78,7 @@ use think\facade\Db;
              return json(['code'=>1,'data'=>'','msg'=>'操作成功']);
          }else{
             Db::name('room')->where($map)->update(['status'=>1]);
-            return json(['code'=>0,'data'=>'','msg'=>'操作成功']);
+            return json(['code'=>1,'data'=>'','msg'=>'操作成功']);
          }
      }
     public function room_list()

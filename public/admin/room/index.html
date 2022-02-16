@@ -10,33 +10,49 @@
 <body>
     <div class="layui-container" style="margin-top: 40px;">
         <div class="layui-row">
-            <div class="layui-col-md4 layui-col-md-offset4">
-                <div class="layui-form">
+            <div class="layui-col-md5 layui-col-md-offset3">
+                <div class="layui-form" lay-filter="search">
                     <div class="layui-form-item">
-                        <div class="layui-input-block">
+                        <div class="layui-inline">
                             <input type="text" id="keyword" name="keyword" placeholder="请输入房间类型" class="layui-input">
                         </div>
                     </div>
                     <div class="layui-form-item">
-                        <div class="layui-input-block">
-                          <button type="button" id="search" class="layui-btn" lay-submit>搜索</button>
+                        <div class="layui-inline">
+                           <button type="button" class="layui-btn" lay-submit=" " lay-filter="searchData">搜索</button>
                         </div>
                     </div>
             </div>
+            <script type="text/html" id="toolBarDemo">
+                <div class="layui-btn-container">
+                    <button type="button" class="layui-btn" lay-event="add">添加</button>
+                </div>
+            </script>
             <table id="table" lay-filter="test"></table>
+            <script type="text/html" id="barDemo">
+                <a class="layui-btn layui-btn-xs" lay-event="edit"><i class="layui-icon">&#xe642;</i></a>
+                <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del"><i class="layui-icon">&#xe640;</i></a>
+            </script>
+            <script type="text/html" id="check_status">
+                <input type="checkbox" name="status" value="{{d.id}}" lay-skin="switch" lay-text="开启|关闭" class="layui-input" {{ d.status === 1 ? 'checked' : '' }} lay-filter="checkbox_status">
+            </script>
         </div>
     </div>
     <script src="/static/layui/layui.js"></script>
     <script>
         layui.use(['form','table','layer'],function(){
-            var $    = layui.$
+            var $    = layui.jquery
             ,form    = layui.form
             ,table   = layui.table;
+
+            form.render(null,'search');
 
             table.render({
                 elem: '#table'
                 ,url: "http://www.csc.com/admin/room/index" //数据接口
+                ,toolbar: '#toolBarDemo'
                 ,page: true //开启分页
+                ,id: 'tableupload'
                 ,parseData: function(res){ //res 即为原始返回的数据
                     return {
                     "code": res.code ==1?0:1, //解析接口状态
@@ -46,9 +62,77 @@
                     };
                 }
                 ,cols: [[ //表头
-                {field: 'id', title: 'ID', width:80, sort: true, fixed: 'left'}
-                ,{field: 'type', title: '房间类型', width:80}
+                {field: 'id', title: 'ID',width:80,sort: true, fixed: 'left'}
+                ,{field: 'type', title: '房间类型'}
+                ,{field: 'status',title:'状态',width:100,templet: '#check_status'}
+                ,{field: 'title',title: '操作',width:100,toolbar:'#barDemo'}
                 ]]
+            });
+            //搜索监听
+            form.on('submit(searchData)',function(data){
+                var field = data.field;
+                table.reload('tableupload',{
+                    where: field
+                });
+            })
+            //添加
+            table.on('toolbar(test)',function(obj){
+                if(obj.event == 'add'){
+                    layer.open({
+                        type:2
+                        ,title:'添加房间类型'
+                        ,content: 'edit.html'
+                        ,area:['500px','300px']
+                        ,anim:2
+                        ,end: function(layero,index){
+                            larer.closeAll('page');
+                        }
+                    });
+                }
+            })
+            table.on('tool(test)',function(obj){
+                //编辑
+                if(obj.event == 'edit'){
+                    layer.open({
+                        type:2
+                        ,title:'编辑房间类型'
+                        ,content: 'add.html'
+                        ,area:['500px','300px']
+                        ,anim:2
+                        ,success:function(layero,index){
+                            $('#')
+                        }
+                        ,end:function(layero,index){
+                            layer.close(index);
+                            table.reload('tableupload');
+                        }
+
+                    });
+                }
+                //删除
+                else if(obj.event == 'del'){
+                    layer.confirm('真的删除么？',{icon:3,title:'提示'},function(index){
+                    $.post('http://www.csc.com/admin/room/del',{id:obj.data.id},function(d){
+                        if(d.code != 1){
+                            layer.msg(d.msg);
+                        }else{
+                            table.reload('tableupload');
+                            layer.close(index);
+                        }
+                    },"json");
+                    });
+                }
+            });
+            //状态监听
+            form.on('switch(checkbox_status)',function(e){
+                var status = e.elem.checked?1:0;
+                $.post('http://www.csc.com/admin/room/state',{id:e.value,status:status},function(d){
+                    if(d.code != 1){
+                        layer.msg(d.msg);
+                    }else{
+                        table.reload('tableupload');
+                    }
+                },"json");
             });
         });
     </script>

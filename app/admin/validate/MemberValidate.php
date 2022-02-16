@@ -1,7 +1,7 @@
 <?php
 namespace app\admin\controller;
 
-use think\facade\Validate;
+use think\Validate;
 
 class MenberValidate extends Validate{
     protected $rule = [

@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>后台管理系统</title>
+    <link rel="stylesheet" href="/static/layui/css/layui.css">
+</head>
+<body>
+    <script src="/static/layui/layui.js"></script>
+    <div class="layui-form">
+        <div class="layui-form-item">
+            <label class="layui-form-label">房间类型</label>
+            <div class="layui-input-block">
+                <input type="text" id="type" name="type" placeholder="请输入房间类型" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">状态</label>
+            <div class="layui-input-block">
+               <input type="radio" name="status" value="1" title="开启" checked>
+               <input type="radio" name="status" value="0" title="关闭" >
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">排序</label>
+            <div class="layui-input-block">
+                <input type="text" id="sort" name="sort" placeholder="请输入排序" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+               <button type="button" id="add_submit" class="layui-btn" lay-submit lay-filter="form_add">保存</button>
+               <button type="button" class="layui-btn layui-btn-danger" data-type="close">关闭</button>
+            </div>
+        </div>
+    </div>
+    <script>
+        layui.use(['form','table','layer'],function(){
+            var $ = layui.jquery
+            ,form = layui.form
+            ,layer = layui.layer
+            ,table = layui.table;
+            $('#add_submit').click(function(){
+                form.on('submit(form_add)',function(data){
+                    $.post('http://www.csc.com/admin/room/add',{},function(d){
+                        if(d.code!=1){
+                            layer.msg(d.msg);
+                        }else{
+                            table.reload('tableupload');
+                        }
+                    },"json");
+                });
+            })
+        });
+    </script>
+</body>
+</html>

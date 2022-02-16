@@ -1,7 +1,7 @@
 <?php
 namespace app\admin\controller;
 
-use think\facade\Validate;
+use think\Validate;
 
 class FloorValidate extends Validate{
     protected $rule = [

@@ -1,13 +1,12 @@
 <?php
 namespace app\admin\validate;
-use think\facade\Validate;
+use think\Validate;
 class RoomValidate extends Validate{
     protected $rule = [
-        'type'       => 'require',
-        'room_num'   => 'require',
-        'yprice'     => 'require|egt:0.00',
-        'price'      => 'require|egt:0.00',
-        'desc'       => 'require'
+        'type'       => 'require'
+    ];
+    protected $message = [
+        '房间类型'   => '不能为空'
     ];
 }
 ?>
